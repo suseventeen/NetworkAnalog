@@ -10,7 +10,7 @@ computer_list = []
 boards = []
 
 
-def update_screen(ai_settings, screen, computers, routers, button1, button2, boards):
+def update_screen(ai_settings, screen, computers, routers, button1, button2, button3, boards):
     """刷新屏幕"""
     #  每次循环都重绘屏幕
     screen.fill(ai_settings.bg_color)
@@ -32,6 +32,7 @@ def update_screen(ai_settings, screen, computers, routers, button1, button2, boa
     pygame.draw.line(screen, (130, 210, 255), (934, 498), (934, 800), 8)
     button1.draw_button()
     button2.draw_button()
+    button3.draw_button()
     draw_con(screen)
 
     #  让最近绘制的屏幕可见
@@ -302,35 +303,44 @@ def send(pack, next):
     return
 
 
-def check_event(button_draw_line, button_get_table, screen, ai_settings):
+def check_event(button_draw_line, button_get_table, button_clean, screen, ai_settings):
     """响应按键和鼠标事件"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            check_mouse(mouse_x, mouse_y, button_draw_line, button_get_table, screen, ai_settings)
+            check_mouse(mouse_x, mouse_y, button_draw_line, button_get_table, button_clean, screen, ai_settings)
     return
 
 
-def check_mouse(mouse_x, mouse_y, button_draw_line, button_get_table, screen, ai_settings):
+def check_mouse(mouse_x, mouse_y, button_draw_line, button_get_table, button_clean, screen, ai_settings):
     """响应鼠标事件"""
     com1_click = computer_list[0].rect.collidepoint(mouse_x, mouse_y)
     button1_clicked = button_draw_line.rect.collidepoint(mouse_x, mouse_y)
     button2_clicked = button_get_table.rect.collidepoint(mouse_x, mouse_y)
+    button3_clicked = button_clean.rect.collidepoint(mouse_x, mouse_y)
     if button1_clicked:
         draw_lines(button_draw_line, screen)
     elif button2_clicked:
         set_form(ai_settings, screen)
+    elif button3_clicked:
+        clean_all()
 
     return
+
+
+def clean_all():
+    for router in router_list:
+        router.form = {'Alice': [999, 'none'], 'Bob': [999, 'none']}
+    set_con()
 
 
 def draw_lines(button, screen):
     sourse = ' '
     dest = ' '
     dots = []
-    while (1):
+    while 1:
         if sourse == ' ':
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:

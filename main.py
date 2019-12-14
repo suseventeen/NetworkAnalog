@@ -27,17 +27,18 @@ def main():
     #  创建按钮
     button_draw_line = Button(ai_settings, screen, "draw line", 100, 420)
     button_get_table = Button(ai_settings, screen, "get table", 250, 420)
+    button_clean = Button(ai_settings, screen, "clean all", 400, 420)
 
     f.set_con()
 
     while True:
         boards = f.create_board(ai_settings, screen)
-        f.check_event(button_draw_line, button_get_table, screen, ai_settings)
+        f.check_event(button_draw_line, button_get_table, button_clean, screen, ai_settings)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
 
-        f.update_screen(ai_settings, screen, computers, routers, button_draw_line, button_get_table, boards)
+        f.update_screen(ai_settings, screen, computers, routers, button_draw_line, button_get_table, button_clean, boards)
 
 
 main()
