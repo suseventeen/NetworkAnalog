@@ -184,12 +184,14 @@ def set_con():
 
 
 def draw_con(screen):
-    pygame.draw.line(screen, (128, 0, 128), (90, 210), (300, 210), 3)
-    pygame.draw.line(screen, (128, 0, 128), (910, 210), (1100, 210), 3)
+    pygame.draw.line(screen, (128, 0, 128), (90, 210), (300, 210), 3)  # Alice-D
+    pygame.draw.line(screen, (128, 0, 128), (910, 210), (1100, 210), 3)  # F-Bob
     if router_list[0].con[3] == 1:
         pygame.draw.line(screen, (128, 0, 128), (350, 60), (580, 60), 3)  # A-B
     if router_list[0].con[4] == 1:
-        x = 1  # A-C
+        pygame.draw.line(screen, (128, 0, 128), (325, 40), (400, 20), 3)
+        pygame.draw.line(screen, (128, 0, 128), (400, 20), (810, 20), 3)
+        pygame.draw.line(screen, (128, 0, 128), (810, 20), (885, 40), 3)  # A-C
     if router_list[0].con[5] == 1:
         pygame.draw.line(screen, (128, 0, 128), (325, 80), (325, 190), 3)  # A-D
     if router_list[0].con[6] == 1:
@@ -197,11 +199,15 @@ def draw_con(screen):
     if router_list[0].con[7] == 1:
         pygame.draw.line(screen, (128, 0, 128), (350, 80), (860, 190), 3)  # A-F
     if router_list[0].con[8] == 1:
-        x = 1  # A-G
+        pygame.draw.line(screen, (128, 0, 128), (300, 60), (280, 135), 3)
+        pygame.draw.line(screen, (128, 0, 128), (280, 135), (280, 285), 3)
+        pygame.draw.line(screen, (128, 0, 128), (280, 285), (300, 360), 3)  # A-G
     if router_list[0].con[9] == 1:
         pygame.draw.line(screen, (128, 0, 128), (350, 80), (580, 340), 3)  # A-H
     if router_list[0].con[10] == 1:
-        x = 1  # A-I
+        pygame.draw.line(screen, (128, 0, 128), (350, 80), (400, 85), 3)
+        pygame.draw.line(screen, (128, 0, 128), (400, 85), (855, 310), 3)
+        pygame.draw.line(screen, (128, 0, 128), (855, 310), (860, 340), 3)  # A-I
     if router_list[1].con[4] == 1:
         pygame.draw.line(screen, (128, 0, 128), (630, 60), (860, 60), 3)  # B-C
     if router_list[1].con[5] == 1:
@@ -213,7 +219,9 @@ def draw_con(screen):
     if router_list[1].con[8] == 1:
         pygame.draw.line(screen, (128, 0, 128), (580, 80), (350, 340), 3)  # B-G
     if router_list[1].con[9] == 1:
-        x = 1  # B-H
+        pygame.draw.line(screen, (128, 0, 128), (605, 80), (565, 115), 3)
+        pygame.draw.line(screen, (128, 0, 128), (565, 115), (565, 310), 3)
+        pygame.draw.line(screen, (128, 0, 128), (565, 310), (605, 340), 3)  # B-H
     if router_list[1].con[10] == 1:
         pygame.draw.line(screen, (128, 0, 128), (630, 80), (860, 340), 3)  # B-I
     if router_list[2].con[5] == 1:
@@ -223,15 +231,21 @@ def draw_con(screen):
     if router_list[2].con[7] == 1:
         pygame.draw.line(screen, (128, 0, 128), (885, 80), (885, 190), 3)  # C-F
     if router_list[2].con[8] == 1:
-        x = 1  # C-G
+        pygame.draw.line(screen, (128, 0, 128), (860, 80), (800, 85), 3)
+        pygame.draw.line(screen, (128, 0, 128), (800, 85), (355, 310), 3)
+        pygame.draw.line(screen, (128, 0, 128), (355, 310), (350, 340), 3)  # C-G
     if router_list[2].con[9] == 1:
         pygame.draw.line(screen, (128, 0, 128), (860, 80), (630, 340), 3)  # C-H
     if router_list[2].con[10] == 1:
-        x = 1  # C-I
+        pygame.draw.line(screen, (128, 0, 128), (910, 60), (930, 135), 3)
+        pygame.draw.line(screen, (128, 0, 128), (930, 135), (930, 285), 3)
+        pygame.draw.line(screen, (128, 0, 128), (930, 285), (910, 360), 3)  # C-I
     if router_list[3].con[6] == 1:
         pygame.draw.line(screen, (128, 0, 128), (350, 210), (580, 210), 3)  # D-E
     if router_list[3].con[7] == 1:
-        x = 1  # D-F
+        pygame.draw.line(screen, (128, 0, 128), (350, 210), (370, 250), 3)
+        pygame.draw.line(screen, (128, 0, 128), (370, 250), (840, 250), 3)
+        pygame.draw.line(screen, (128, 0, 128), (840, 250), (860, 210), 3)  # D-F
     if router_list[3].con[8] == 1:
         pygame.draw.line(screen, (128, 0, 128), (325, 230), (325, 340), 3)  # D-G
     if router_list[3].con[9] == 1:
@@ -255,7 +269,9 @@ def draw_con(screen):
     if router_list[6].con[9] == 1:
         pygame.draw.line(screen, (128, 0, 128), (350, 360), (580, 360), 3)  # G-H
     if router_list[6].con[10] == 1:
-        x = 1  # G-I
+        pygame.draw.line(screen, (128, 0, 128), (325, 380), (400, 400), 3)
+        pygame.draw.line(screen, (128, 0, 128), (400, 400), (810, 400), 3)
+        pygame.draw.line(screen, (128, 0, 128), (810, 400), (885, 380), 3)  # G-I
     if router_list[7].con[10] == 1:
         pygame.draw.line(screen, (128, 0, 128), (630, 360), (860, 360), 3)  # H-I
 

@@ -25,9 +25,9 @@ def main():
     boards = f.create_board(ai_settings, screen)
 
     #  创建按钮
-    button_draw_line = Button(ai_settings, screen, "draw line", 100, 420)
-    button_get_table = Button(ai_settings, screen, "get table", 250, 420)
-    button_clean = Button(ai_settings, screen, "clean all", 400, 420)
+    button_draw_line = Button(ai_settings, screen, "draw line", 100, 460)
+    button_get_table = Button(ai_settings, screen, "get table", 250, 460)
+    button_clean = Button(ai_settings, screen, "clean all", 400, 460)
 
     f.set_con()
 
