@@ -3,6 +3,7 @@ from pygame.sprite import Group
 from settings import Settings
 from computer import Computer
 from button import Button
+from stats import Stats
 import function as f
 import sys
 
@@ -21,8 +22,10 @@ def main():
     computers = f.create_computers(ai_settings, screen)
     routers, router_list = f.create_routers(ai_settings, screen)
 
+    stats = Stats()
+
     #  创建board组
-    boards = f.create_board(ai_settings, screen)
+    boards = f.create_board(ai_settings, screen, stats)
 
     #  创建按钮
     button_draw_line = Button(ai_settings, screen, "draw line", 100, 460)
@@ -32,13 +35,13 @@ def main():
     f.set_con()
 
     while True:
-        boards = f.create_board(ai_settings, screen)
-        f.check_event(button_draw_line, button_get_table, button_clean, screen, ai_settings)
+        boards = f.create_board(ai_settings, screen, stats)
+        f.check_event(button_draw_line, button_get_table, button_clean, screen, ai_settings, stats)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
 
-        f.update_screen(ai_settings, screen, computers, routers, button_draw_line, button_get_table, button_clean, boards)
+        f.update_screen(ai_settings, screen, computers, routers, button_draw_line, button_get_table, button_clean, boards, stats)
 
 
 main()

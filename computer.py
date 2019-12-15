@@ -30,20 +30,20 @@ class Computer(Sprite):
         return pack
 
 
-    def input(self):
+    def input(self, msg, stats):
         import function as f
-        data = input('input data: ')
+        data = msg
         if self.name == 'Alice':
             pack = self.package(data, 'Bob')
-            f.send(pack, 'D')
+            f.send(pack, 'D', stats)
         elif self.name == 'Bob':
             pack = self.package(data, 'Alice')
-            f.send(pack, 'F')
+            f.send(pack, 'F', stats)
 
 
     def output(self, pack):
         data = pack['data']
-        print(data)
+        return data
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)

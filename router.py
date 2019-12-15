@@ -21,12 +21,14 @@ class Router(Sprite):
 
         self.x = float(self.rect.x)
 
-    def recv(self, pack):
+    def recv(self, pack, stats):
+        self.image = pygame.image.load('images/router_green.png')
         import function as f
         des = pack['des']  # 从包中提取目的地址
         next = self.form[des][1]  # 从路由表中查找下一跳地址
-        f.send(pack, next)  # 转发给下一跳
+        f.send(pack, next, stats)  # 转发给下一跳
 
+        f.change_line_color(self.name, next, stats)
 
     def update_form(self, source, form):
         sign = 0

@@ -7,10 +7,11 @@ from board import Board
 
 router_list = []
 computer_list = []
-boards = []
+boards_put = []
+# boards = []
 
 
-def update_screen(ai_settings, screen, computers, routers, button1, button2, button3, boards):
+def update_screen(ai_settings, screen, computers, routers, button1, button2, button3, boards, stats):
     """刷新屏幕"""
     #  每次循环都重绘屏幕
     screen.fill(ai_settings.bg_color)
@@ -21,6 +22,8 @@ def update_screen(ai_settings, screen, computers, routers, button1, button2, but
     for router in routers.sprites():
         router.blitme()
     for board in boards:
+        board.draw_board()
+    for board in boards_put:
         board.draw_board()
     pygame.draw.line(screen, (130, 210, 255), (0, 498), (1200, 498), 8)
     pygame.draw.line(screen, (130, 210, 255), (0, 650), (402, 650), 8)
@@ -33,7 +36,7 @@ def update_screen(ai_settings, screen, computers, routers, button1, button2, but
     button1.draw_button()
     button2.draw_button()
     button3.draw_button()
-    draw_con(screen)
+    draw_con(screen, stats)
 
     #  让最近绘制的屏幕可见
     pygame.display.flip()
@@ -90,13 +93,13 @@ def create_routers(ai_settings, screen):
     return routers, router_list
 
 
-def create_board(ai_settings, screen):
+def create_board(ai_settings, screen, stats):
     boards = []
     #  创建输入输出窗口
-    board_input = Board(402, 150, screen, 'test', ai_settings.board_color, ai_settings.text_color, 0, 499)
-    board_output = Board(402, 150, screen, 'test', ai_settings.board_color, ai_settings.text_color, 0, 650)
-    boards.append(board_input)
-    boards.append(board_output)
+    board_input = Board(402, 150, screen, stats.input_msg, ai_settings.board_color, ai_settings.text_color, 0, 499)
+    board_output = Board(402, 150, screen, stats.output_msg, ai_settings.board_color, ai_settings.text_color, 0, 650)
+    boards_put.append(board_input)
+    boards_put.append(board_output)
 
     #  创建路由表表格窗口
     i = 0
@@ -183,100 +186,100 @@ def set_con():
     return
 
 
-def draw_con(screen):
-    pygame.draw.line(screen, (128, 0, 128), (90, 210), (300, 210), 3)  # Alice-D
-    pygame.draw.line(screen, (128, 0, 128), (910, 210), (1100, 210), 3)  # F-Bob
+def draw_con(screen, stats):
+    pygame.draw.line(screen, stats.line_color[0], (90, 210), (300, 210), 3)  # Alice-D
+    pygame.draw.line(screen, stats.line_color[1], (910, 210), (1100, 210), 3)  # F-Bob
     if router_list[0].con[3] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (350, 60), (580, 60), 3)  # A-B
+        pygame.draw.line(screen, stats.line_color[2], (350, 60), (580, 60), 3)  # A-B
     if router_list[0].con[4] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (325, 40), (400, 20), 3)
-        pygame.draw.line(screen, (128, 0, 128), (400, 20), (810, 20), 3)
-        pygame.draw.line(screen, (128, 0, 128), (810, 20), (885, 40), 3)  # A-C
+        pygame.draw.line(screen, stats.line_color[3], (325, 40), (400, 20), 3)
+        pygame.draw.line(screen, stats.line_color[3], (400, 20), (810, 20), 3)
+        pygame.draw.line(screen, stats.line_color[3], (810, 20), (885, 40), 3)  # A-C
     if router_list[0].con[5] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (325, 80), (325, 190), 3)  # A-D
+        pygame.draw.line(screen, stats.line_color[4], (325, 80), (325, 190), 3)  # A-D
     if router_list[0].con[6] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (350, 80), (580, 190), 3)  # A-E
+        pygame.draw.line(screen, stats.line_color[5], (350, 80), (580, 190), 3)  # A-E
     if router_list[0].con[7] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (350, 80), (860, 190), 3)  # A-F
+        pygame.draw.line(screen, stats.line_color[6], (350, 80), (860, 190), 3)  # A-F
     if router_list[0].con[8] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (300, 60), (280, 135), 3)
-        pygame.draw.line(screen, (128, 0, 128), (280, 135), (280, 285), 3)
-        pygame.draw.line(screen, (128, 0, 128), (280, 285), (300, 360), 3)  # A-G
+        pygame.draw.line(screen, stats.line_color[7], (300, 60), (280, 135), 3)
+        pygame.draw.line(screen, stats.line_color[7], (280, 135), (280, 285), 3)
+        pygame.draw.line(screen, stats.line_color[7], (280, 285), (300, 360), 3)  # A-G
     if router_list[0].con[9] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (350, 80), (580, 340), 3)  # A-H
+        pygame.draw.line(screen, stats.line_color[8], (350, 80), (580, 340), 3)  # A-H
     if router_list[0].con[10] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (350, 80), (400, 85), 3)
-        pygame.draw.line(screen, (128, 0, 128), (400, 85), (855, 310), 3)
-        pygame.draw.line(screen, (128, 0, 128), (855, 310), (860, 340), 3)  # A-I
+        pygame.draw.line(screen, stats.line_color[9], (350, 80), (400, 85), 3)
+        pygame.draw.line(screen, stats.line_color[9], (400, 85), (855, 310), 3)
+        pygame.draw.line(screen, stats.line_color[9], (855, 310), (860, 340), 3)  # A-I
     if router_list[1].con[4] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (630, 60), (860, 60), 3)  # B-C
+        pygame.draw.line(screen, stats.line_color[10], (630, 60), (860, 60), 3)  # B-C
     if router_list[1].con[5] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (580, 80), (350, 190), 3)  # B-D
+        pygame.draw.line(screen, stats.line_color[11], (580, 80), (350, 190), 3)  # B-D
     if router_list[1].con[6] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (605, 80), (605, 190), 3)  # B-E
+        pygame.draw.line(screen, stats.line_color[12], (605, 80), (605, 190), 3)  # B-E
     if router_list[1].con[7] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (630, 80), (860, 190), 3)  # B-F
+        pygame.draw.line(screen, stats.line_color[13], (630, 80), (860, 190), 3)  # B-F
     if router_list[1].con[8] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (580, 80), (350, 340), 3)  # B-G
+        pygame.draw.line(screen, stats.line_color[14], (580, 80), (350, 340), 3)  # B-G
     if router_list[1].con[9] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (605, 80), (565, 115), 3)
-        pygame.draw.line(screen, (128, 0, 128), (565, 115), (565, 310), 3)
-        pygame.draw.line(screen, (128, 0, 128), (565, 310), (605, 340), 3)  # B-H
+        pygame.draw.line(screen, stats.line_color[15], (605, 80), (565, 115), 3)
+        pygame.draw.line(screen, stats.line_color[15], (565, 115), (565, 310), 3)
+        pygame.draw.line(screen, stats.line_color[15], (565, 310), (605, 340), 3)  # B-H
     if router_list[1].con[10] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (630, 80), (860, 340), 3)  # B-I
+        pygame.draw.line(screen, stats.line_color[16], (630, 80), (860, 340), 3)  # B-I
     if router_list[2].con[5] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (860, 80), (350, 190), 3)  # C-D
+        pygame.draw.line(screen, stats.line_color[17], (860, 80), (350, 190), 3)  # C-D
     if router_list[2].con[6] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (860, 80), (630, 190), 3)  # C-E
+        pygame.draw.line(screen, stats.line_color[18], (860, 80), (630, 190), 3)  # C-E
     if router_list[2].con[7] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (885, 80), (885, 190), 3)  # C-F
+        pygame.draw.line(screen, stats.line_color[19], (885, 80), (885, 190), 3)  # C-F
     if router_list[2].con[8] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (860, 80), (800, 85), 3)
-        pygame.draw.line(screen, (128, 0, 128), (800, 85), (355, 310), 3)
-        pygame.draw.line(screen, (128, 0, 128), (355, 310), (350, 340), 3)  # C-G
+        pygame.draw.line(screen, stats.line_color[20], (860, 80), (800, 85), 3)
+        pygame.draw.line(screen, stats.line_color[20], (800, 85), (355, 310), 3)
+        pygame.draw.line(screen, stats.line_color[20], (355, 310), (350, 340), 3)  # C-G
     if router_list[2].con[9] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (860, 80), (630, 340), 3)  # C-H
+        pygame.draw.line(screen, stats.line_color[21], (860, 80), (630, 340), 3)  # C-H
     if router_list[2].con[10] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (910, 60), (930, 135), 3)
-        pygame.draw.line(screen, (128, 0, 128), (930, 135), (930, 285), 3)
-        pygame.draw.line(screen, (128, 0, 128), (930, 285), (910, 360), 3)  # C-I
+        pygame.draw.line(screen, stats.line_color[22], (910, 60), (930, 135), 3)
+        pygame.draw.line(screen, stats.line_color[22], (930, 135), (930, 285), 3)
+        pygame.draw.line(screen, stats.line_color[22], (930, 285), (910, 360), 3)  # C-I
     if router_list[3].con[6] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (350, 210), (580, 210), 3)  # D-E
+        pygame.draw.line(screen, stats.line_color[23], (350, 210), (580, 210), 3)  # D-E
     if router_list[3].con[7] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (350, 210), (370, 250), 3)
-        pygame.draw.line(screen, (128, 0, 128), (370, 250), (840, 250), 3)
-        pygame.draw.line(screen, (128, 0, 128), (840, 250), (860, 210), 3)  # D-F
+        pygame.draw.line(screen, stats.line_color[24], (350, 210), (370, 250), 3)
+        pygame.draw.line(screen, stats.line_color[24], (370, 250), (840, 250), 3)
+        pygame.draw.line(screen, stats.line_color[24], (840, 250), (860, 210), 3)  # D-F
     if router_list[3].con[8] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (325, 230), (325, 340), 3)  # D-G
+        pygame.draw.line(screen, stats.line_color[25], (325, 230), (325, 340), 3)  # D-G
     if router_list[3].con[9] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (350, 230), (580, 340), 3)  # D-H
+        pygame.draw.line(screen, stats.line_color[26], (350, 230), (580, 340), 3)  # D-H
     if router_list[3].con[10] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (350, 230), (860, 340), 3)  # D-I
+        pygame.draw.line(screen, stats.line_color[27], (350, 230), (860, 340), 3)  # D-I
     if router_list[4].con[7] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (630, 210), (860, 210), 3)  # E-F
+        pygame.draw.line(screen, stats.line_color[28], (630, 210), (860, 210), 3)  # E-F
     if router_list[4].con[8] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (580, 230), (350, 340), 3)  # E-G
+        pygame.draw.line(screen, stats.line_color[29], (580, 230), (350, 340), 3)  # E-G
     if router_list[4].con[9] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (605, 230), (605, 340), 3)  # E-H
+        pygame.draw.line(screen, stats.line_color[30], (605, 230), (605, 340), 3)  # E-H
     if router_list[4].con[10] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (630, 230), (860, 340), 3)  # E-I
+        pygame.draw.line(screen, stats.line_color[31], (630, 230), (860, 340), 3)  # E-I
     if router_list[5].con[8] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (860, 230), (350, 340), 3)  # F-G
+        pygame.draw.line(screen, stats.line_color[32], (860, 230), (350, 340), 3)  # F-G
     if router_list[5].con[9] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (860, 230), (630, 340), 3)  # F-H
+        pygame.draw.line(screen, stats.line_color[33], (860, 230), (630, 340), 3)  # F-H
     if router_list[5].con[10] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (885, 230), (885, 340), 3)  # F-I
+        pygame.draw.line(screen, stats.line_color[34], (885, 230), (885, 340), 3)  # F-I
     if router_list[6].con[9] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (350, 360), (580, 360), 3)  # G-H
+        pygame.draw.line(screen, stats.line_color[35], (350, 360), (580, 360), 3)  # G-H
     if router_list[6].con[10] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (325, 380), (400, 400), 3)
-        pygame.draw.line(screen, (128, 0, 128), (400, 400), (810, 400), 3)
-        pygame.draw.line(screen, (128, 0, 128), (810, 400), (885, 380), 3)  # G-I
+        pygame.draw.line(screen, stats.line_color[36], (325, 380), (400, 400), 3)
+        pygame.draw.line(screen, stats.line_color[36], (400, 400), (810, 400), 3)
+        pygame.draw.line(screen, stats.line_color[36], (810, 400), (885, 380), 3)  # G-I
     if router_list[7].con[10] == 1:
-        pygame.draw.line(screen, (128, 0, 128), (630, 360), (860, 360), 3)  # H-I
+        pygame.draw.line(screen, stats.line_color[37], (630, 360), (860, 360), 3)  # H-I
 
 
-def set_form(ai_settings, screen):
+def set_form(ai_settings, screen, stats):
     form = []
     for router in router_list:
         form.append(router.form)
@@ -287,72 +290,145 @@ def set_form(ai_settings, screen):
         for i in range(9):
             if router.con[i + 2] == 1:
                 sign = sign + router_list[i].update_form(router.name, form[j - 1])
-    create_board(ai_settings, screen)
+    create_board(ai_settings, screen, stats)
     if sign > 0:
-        set_form(ai_settings, screen)
+        set_form(ai_settings, screen, stats)
+    clean_color(stats)
     return
 
 
-def send(pack, next):
+def send(pack, next, stats):
     if next == 'A':
-        router_list[0].recv(pack)
+        router_list[0].recv(pack, stats)
     elif next == 'B':
-        router_list[1].recv(pack)
+        router_list[1].recv(pack, stats)
     elif next == 'C':
-        router_list[2].recv(pack)
+        router_list[2].recv(pack, stats)
     elif next == 'D':
-        router_list[3].recv(pack)
+        router_list[3].recv(pack, stats)
     elif next == 'E':
-        router_list[4].recv(pack)
+        router_list[4].recv(pack, stats)
     elif next == 'F':
-        router_list[5].recv(pack)
+        router_list[5].recv(pack, stats)
     elif next == 'G':
-        router_list[6].recv(pack)
+        router_list[6].recv(pack, stats)
     elif next == 'H':
-        router_list[7].recv(pack)
+        router_list[7].recv(pack, stats)
     elif next == 'I':
-        router_list[8].recv(pack)
+        router_list[8].recv(pack, stats)
     elif next == 'Alice':
-        computer_list[0].output(pack)
+        stats.input_msg = computer_list[0].output(pack)
     elif next == 'Bob':
-        computer_list[1].output(pack)
+        stats.output_msg = computer_list[1].output(pack)
     return
 
 
-def check_event(button_draw_line, button_get_table, button_clean, screen, ai_settings):
+def check_event(button_draw_line, button_get_table, button_clean, screen, ai_settings, stats):
     """响应按键和鼠标事件"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            check_mouse(mouse_x, mouse_y, button_draw_line, button_get_table, button_clean, screen, ai_settings)
+            check_mouse(mouse_x, mouse_y, button_draw_line, button_get_table, button_clean, screen, ai_settings, stats)
+        elif event.type == pygame.KEYDOWN:
+            com_input(event, stats)
     return
 
 
-def check_mouse(mouse_x, mouse_y, button_draw_line, button_get_table, button_clean, screen, ai_settings):
+def check_mouse(mouse_x, mouse_y, button_draw_line, button_get_table, button_clean, screen, ai_settings, stats):
     """响应鼠标事件"""
     com1_click = computer_list[0].rect.collidepoint(mouse_x, mouse_y)
     button1_clicked = button_draw_line.rect.collidepoint(mouse_x, mouse_y)
     button2_clicked = button_get_table.rect.collidepoint(mouse_x, mouse_y)
     button3_clicked = button_clean.rect.collidepoint(mouse_x, mouse_y)
     if button1_clicked:
-        draw_lines(button_draw_line, screen)
+        draw_lines(button_draw_line, screen, stats)
     elif button2_clicked:
-        set_form(ai_settings, screen)
+        set_form(ai_settings, screen, stats)
     elif button3_clicked:
-        clean_all()
+        clean_all(stats)
 
     return
 
 
-def clean_all():
+def com_input(event, stats):
+    msg = stats.input_msg
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_a:
+            msg = msg + 'a'
+        elif event.key == pygame.K_b:
+            msg = msg + 'b'
+        elif event.key == pygame.K_c:
+            msg = msg + 'c'
+        elif event.key == pygame.K_d:
+            msg = msg + 'd'
+        elif event.key == pygame.K_e:
+            msg = msg + 'e'
+        elif event.key == pygame.K_f:
+            msg = msg + 'f'
+        elif event.key == pygame.K_g:
+            msg = msg + 'g'
+        elif event.key == pygame.K_h:
+            msg = msg + 'h'
+        elif event.key == pygame.K_i:
+            msg = msg + 'i'
+        elif event.key == pygame.K_j:
+            msg = msg + 'j'
+        elif event.key == pygame.K_k:
+            msg = msg + 'k'
+        elif event.key == pygame.K_l:
+            msg = msg + 'l'
+        elif event.key == pygame.K_m:
+            msg = msg + 'm'
+        elif event.key == pygame.K_n:
+            msg = msg + 'n'
+        elif event.key == pygame.K_o:
+            msg = msg + 'o'
+        elif event.key == pygame.K_p:
+            msg = msg + 'p'
+        elif event.key == pygame.K_q:
+            msg = msg + 'q'
+        elif event.key == pygame.K_r:
+            msg = msg + 'r'
+        elif event.key == pygame.K_s:
+            msg = msg + 's'
+        elif event.key == pygame.K_t:
+            msg = msg + 't'
+        elif event.key == pygame.K_u:
+            msg = msg + 'u'
+        elif event.key == pygame.K_v:
+            msg = msg + 'v'
+        elif event.key == pygame.K_w:
+            msg = msg + 'w'
+        elif event.key == pygame.K_x:
+            msg = msg + 'x'
+        elif event.key == pygame.K_y:
+            msg = msg + 'y'
+        elif event.key == pygame.K_z:
+            msg = msg + 'z'
+        elif event.key == pygame.K_SPACE :
+            msg = msg + ' '
+        elif event.key == pygame.K_F1:
+            computer_list[0].input(stats.input_msg, stats)
+        elif event.key == pygame.K_1:
+            msg = msg + '1'
+        elif event.key == pygame.K_BACKSPACE:
+            msg = msg[:-1]
+
+        stats.input_msg = msg
+
+
+def clean_all(stats):
     for router in router_list:
         router.form = {'Alice': [999, 'none'], 'Bob': [999, 'none']}
+        stats.output_msg = ''
+        stats.input_msg = ''
+    clean_color(stats)
     set_con()
 
 
-def draw_lines(button, screen):
+def draw_lines(button, screen, stats):
     sourse = ' '
     dest = ' '
     dots = []
@@ -410,6 +486,7 @@ def draw_lines(button, screen):
             dots.append(dest)
             break
     make_line(dots, screen)
+    button.button_color = (0, 0, 0)
 
 
 def make_line(dots, screen):
@@ -557,6 +634,103 @@ def make_line(dots, screen):
             router_list[7].con[10] = 1
             router_list[8].con[9] = 1
             pygame.draw.line(screen, (128, 0, 128), (630, 360), (860, 360), 3)  # H-I
+    return
+
+
+def clean_color(stats):
+    """重置所有路由器和路径的颜色"""
+    for router in router_list:
+        router.image = pygame.image.load('images/router_blue.png')
+    for i in range(38):
+        stats.line_color[i] = (128, 0, 128)
+    return
+
+
+def change_line_color(name1, name2, stats):
+    stats.line_color[0] = [60, 179, 113]
+    stats.line_color[1] = [60, 179, 113]
+    name = [name1, name2]
+    if 'A' in name :
+        if 'B' in name:
+            stats.line_color[2] = [60, 179, 113]
+        elif 'C' in name:
+            stats.line_color[3] = [60, 179, 113]
+        elif 'D' in name:
+            stats.line_color[4] = [60, 179, 113]
+        elif 'E' in name:
+            stats.line_color[5] = [60, 179, 113]
+        elif 'F' in name:
+            stats.line_color[6] = [60, 179, 113]
+        elif 'G' in name:
+            stats.line_color[7] = [60, 179, 113]
+        elif 'H' in name:
+            stats.line_color[8] = [60, 179, 113]
+        elif 'I' in name:
+            stats.line_color[9] = [60, 179, 113]
+    elif 'B' in name :
+        if 'C' in name:
+            stats.line_color[10] = [60, 179, 113]
+        elif 'D' in name:
+            stats.line_color[11] = [60, 179, 113]
+        elif 'E' in name:
+            stats.line_color[12] = [60, 179, 113]
+        elif 'F' in name:
+            stats.line_color[13] = [60, 179, 113]
+        elif 'G' in name:
+            stats.line_color[14] = [60, 179, 113]
+        elif 'H' in name:
+            stats.line_color[15] = [60, 179, 113]
+        elif 'I' in name:
+            stats.line_color[16] = [60, 179, 113]
+    elif 'C' in name :
+        if 'D' in name:
+            stats.line_color[17] = [60, 179, 113]
+        elif 'E' in name:
+            stats.line_color[18] = [60, 179, 113]
+        elif 'F' in name:
+            stats.line_color[19] = [60, 179, 113]
+        elif 'G' in name:
+            stats.line_color[20] = [60, 179, 113]
+        elif 'H' in name:
+            stats.line_color[21] = [60, 179, 113]
+        elif 'I' in name:
+            stats.line_color[22] = [60, 179, 113]
+    elif 'D' in name :
+        if 'E' in name:
+            stats.line_color[23] = [60, 179, 113]
+        elif 'F' in name:
+            stats.line_color[24] = [60, 179, 113]
+        elif 'G' in name:
+            stats.line_color[25] = [60, 179, 113]
+        elif 'H' in name:
+            stats.line_color[26] = [60, 179, 113]
+        elif 'I' in name:
+            stats.line_color[27] = [60, 179, 113]
+    elif 'E' in name :
+        if 'F' in name:
+            stats.line_color[28] = [60, 179, 113]
+        elif 'G' in name:
+            stats.line_color[29] = [60, 179, 113]
+        elif 'H' in name:
+            stats.line_color[30] = [60, 179, 113]
+        elif 'I' in name:
+            stats.line_color[31] = [60, 179, 113]
+    elif 'F' in name :
+        if 'G' in name:
+            stats.line_color[32] = [60, 179, 113]
+        elif 'H' in name:
+            stats.line_color[33] = [60, 179, 113]
+        elif 'I' in name:
+            stats.line_color[34] = [60, 179, 113]
+    elif 'G' in name :
+        if 'H' in name:
+            stats.line_color[35] = [60, 179, 113]
+        elif 'I' in name:
+            stats.line_color[36] = [60, 179, 113]
+    elif 'H' in name :
+        if 'I' in name:
+            stats.line_color[37] = [60, 179, 113]
+
     return
 
 # def ip_pack(msg):
