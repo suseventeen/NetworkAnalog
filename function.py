@@ -8,7 +8,6 @@ from board import Board
 router_list = []
 computer_list = []
 boards_put = []
-# boards = []
 
 
 def update_screen(ai_settings, screen, computers, routers, button1, button2, button3, boards, stats):
@@ -293,29 +292,29 @@ def set_form(ai_settings, screen, stats):
     create_board(ai_settings, screen, stats)
     if sign > 0:
         set_form(ai_settings, screen, stats)
-    clean_color(stats)
+    clean_color(stats, ai_settings)
     return
 
 
-def send(pack, next, stats):
+def send(pack, next, stats, ai_setting):
     if next == 'A':
-        router_list[0].recv(pack, stats)
+        router_list[0].recv(pack, stats, ai_setting)
     elif next == 'B':
-        router_list[1].recv(pack, stats)
+        router_list[1].recv(pack, stats, ai_setting)
     elif next == 'C':
-        router_list[2].recv(pack, stats)
+        router_list[2].recv(pack, stats, ai_setting)
     elif next == 'D':
-        router_list[3].recv(pack, stats)
+        router_list[3].recv(pack, stats, ai_setting)
     elif next == 'E':
-        router_list[4].recv(pack, stats)
+        router_list[4].recv(pack, stats, ai_setting)
     elif next == 'F':
-        router_list[5].recv(pack, stats)
+        router_list[5].recv(pack, stats, ai_setting)
     elif next == 'G':
-        router_list[6].recv(pack, stats)
+        router_list[6].recv(pack, stats, ai_setting)
     elif next == 'H':
-        router_list[7].recv(pack, stats)
+        router_list[7].recv(pack, stats, ai_setting)
     elif next == 'I':
-        router_list[8].recv(pack, stats)
+        router_list[8].recv(pack, stats, ai_setting)
     elif next == 'Alice':
         stats.input_msg = computer_list[0].output(pack)
     elif next == 'Bob':
@@ -330,29 +329,33 @@ def check_event(button_draw_line, button_get_table, button_clean, screen, ai_set
             sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            check_mouse(mouse_x, mouse_y, button_draw_line, button_get_table, button_clean, screen, ai_settings, stats)
+            if stats.button_draw_stat == 'off':
+                check_mouse(mouse_x, mouse_y, button_draw_line, button_get_table, button_clean, screen, ai_settings, stats)
+            else:
+                draw_lines(button_draw_line, screen, stats, ai_settings, mouse_x, mouse_y)
         elif event.type == pygame.KEYDOWN:
-            com_input(event, stats)
+            com_input(event, stats, ai_settings)
     return
 
 
 def check_mouse(mouse_x, mouse_y, button_draw_line, button_get_table, button_clean, screen, ai_settings, stats):
     """响应鼠标事件"""
-    com1_click = computer_list[0].rect.collidepoint(mouse_x, mouse_y)
     button1_clicked = button_draw_line.rect.collidepoint(mouse_x, mouse_y)
     button2_clicked = button_get_table.rect.collidepoint(mouse_x, mouse_y)
     button3_clicked = button_clean.rect.collidepoint(mouse_x, mouse_y)
     if button1_clicked:
-        draw_lines(button_draw_line, screen, stats)
+        button_draw_line.button_color = ai_settings.inbutton_color
+        button_draw_line.prep_msg("draw line")
+        stats.button_draw_stat = 'on'
     elif button2_clicked:
         set_form(ai_settings, screen, stats)
     elif button3_clicked:
-        clean_all(stats)
+        clean_all(stats, ai_settings)
 
     return
 
 
-def com_input(event, stats):
+def com_input(event, stats, ai_setting):
     msg = stats.input_msg
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_a:
@@ -410,7 +413,7 @@ def com_input(event, stats):
         elif event.key == pygame.K_SPACE :
             msg = msg + ' '
         elif event.key == pygame.K_F1:
-            computer_list[0].input(stats.input_msg, stats)
+            computer_list[0].input(stats.input_msg, stats, ai_setting)
         elif event.key == pygame.K_1:
             msg = msg + '1'
         elif event.key == pygame.K_BACKSPACE:
@@ -419,234 +422,198 @@ def com_input(event, stats):
         stats.input_msg = msg
 
 
-def clean_all(stats):
+def clean_all(stats, ai_setting):
     for router in router_list:
         router.form = {'Alice': [999, 'none'], 'Bob': [999, 'none']}
         stats.output_msg = ''
         stats.input_msg = ''
-    clean_color(stats)
+    clean_color(stats, ai_setting)
     set_con()
 
 
-def draw_lines(button, screen, stats):
-    sourse = ' '
-    dest = ' '
-    dots = []
-    while 1:
-        if sourse == ' ':
-            for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    sou_x, sou_y = pygame.mouse.get_pos()
-                    if router_list[0].rect.collidepoint(sou_x, sou_y):
-                        sourse = 'A'
-                    elif router_list[1].rect.collidepoint(sou_x, sou_y):
-                        sourse = 'B'
-                    elif router_list[2].rect.collidepoint(sou_x, sou_y):
-                        sourse = 'C'
-                    elif router_list[3].rect.collidepoint(sou_x, sou_y):
-                        sourse = 'D'
-                    elif router_list[4].rect.collidepoint(sou_x, sou_y):
-                        sourse = 'E'
-                    elif router_list[5].rect.collidepoint(sou_x, sou_y):
-                        sourse = 'F'
-                    elif router_list[6].rect.collidepoint(sou_x, sou_y):
-                        sourse = 'G'
-                    elif router_list[7].rect.collidepoint(sou_x, sou_y):
-                        sourse = 'H'
-                    elif router_list[8].rect.collidepoint(sou_x, sou_y):
-                        sourse = 'I'
-                    elif button.rect.collidepoint(sou_x, sou_y):
-                        return
-        elif dest == ' ':
-            for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    des_x, des_y = pygame.mouse.get_pos()
-                    if router_list[0].rect.collidepoint(des_x, des_y):
-                        dest = 'A'
-                    elif router_list[1].rect.collidepoint(des_x, des_y):
-                        dest = 'B'
-                    elif router_list[2].rect.collidepoint(des_x, des_y):
-                        dest = 'C'
-                    elif router_list[3].rect.collidepoint(des_x, des_y):
-                        dest = 'D'
-                    elif router_list[4].rect.collidepoint(des_x, des_y):
-                        dest = 'E'
-                    elif router_list[5].rect.collidepoint(des_x, des_y):
-                        dest = 'F'
-                    elif router_list[6].rect.collidepoint(des_x, des_y):
-                        dest = 'G'
-                    elif router_list[7].rect.collidepoint(des_x, des_y):
-                        dest = 'H'
-                    elif router_list[8].rect.collidepoint(des_x, des_y):
-                        dest = 'I'
-                    elif button.rect.collidepoint(des_x, des_y):
-                        return
-        else:
-            dots.append(sourse)
-            dots.append(dest)
-            break
-    make_line(dots, screen)
-    button.button_color = (0, 0, 0)
+def draw_lines(button, screen, stats, ai_settings, mouse_x, mouse_y):
+    if button.rect.collidepoint(mouse_x, mouse_y):
+        button.button_color = ai_settings.unbutton_color
+        button.prep_msg("draw line")
+        stats.button_draw_stat = 'off'
+    elif stats.source_dot == '':
+        if router_list[0].rect.collidepoint(mouse_x, mouse_y):
+            stats.source_dot = 'A'
+        elif router_list[1].rect.collidepoint(mouse_x, mouse_y):
+            stats.source_dot = 'B'
+        elif router_list[2].rect.collidepoint(mouse_x, mouse_y):
+            stats.source_dot = 'C'
+        elif router_list[3].rect.collidepoint(mouse_x, mouse_y):
+            stats.source_dot = 'D'
+        elif router_list[4].rect.collidepoint(mouse_x, mouse_y):
+            stats.source_dot = 'E'
+        elif router_list[5].rect.collidepoint(mouse_x, mouse_y):
+            stats.source_dot = 'F'
+        elif router_list[6].rect.collidepoint(mouse_x, mouse_y):
+            stats.source_dot = 'G'
+        elif router_list[7].rect.collidepoint(mouse_x, mouse_y):
+            stats.source_dot = 'H'
+        elif router_list[8].rect.collidepoint(mouse_x, mouse_y):
+            stats.source_dot = 'I'
+    elif stats.dest_dot == '':
+        if router_list[0].rect.collidepoint(mouse_x, mouse_y) and stats.source_dot != 'A':
+            stats.dest_dot = 'A'
+        elif router_list[1].rect.collidepoint(mouse_x, mouse_y) and stats.source_dot != 'B':
+            stats.dest_dot = 'B'
+        elif router_list[2].rect.collidepoint(mouse_x, mouse_y) and stats.source_dot != 'C':
+            stats.dest_dot = 'C'
+        elif router_list[3].rect.collidepoint(mouse_x, mouse_y) and stats.source_dot != 'D':
+            stats.dest_dot = 'D'
+        elif router_list[4].rect.collidepoint(mouse_x, mouse_y) and stats.source_dot != 'E':
+            stats.dest_dot = 'E'
+        elif router_list[5].rect.collidepoint(mouse_x, mouse_y) and stats.source_dot != 'F':
+            stats.dest_dot = 'F'
+        elif router_list[6].rect.collidepoint(mouse_x, mouse_y) and stats.source_dot != 'G':
+            stats.dest_dot = 'G'
+        elif router_list[7].rect.collidepoint(mouse_x, mouse_y) and stats.source_dot != 'H':
+            stats.dest_dot = 'H'
+        elif router_list[8].rect.collidepoint(mouse_x, mouse_y) and stats.source_dot != 'I':
+            stats.dest_dot = 'I'
+    if stats.source_dot != '' and stats.dest_dot != '':
+        dots = []
+        dots.append(stats.source_dot)
+        dots.append(stats.dest_dot)
+        make_line(dots)
+        stats.source_dot = ''
+        stats.dest_dot = ''
 
 
-def make_line(dots, screen):
+
+def make_line(dots):
     if 'A' in dots:
         if 'B' in dots:
             router_list[0].con[3] = 1
             router_list[1].con[2] = 1
-            pygame.draw.line(screen, (128, 0, 128), (350, 60), (580, 60), 3)  # A-B
-        if 'C' in dots:
+        elif 'C' in dots:
             router_list[0].con[4] = 1
             router_list[2].con[2] = 1
-        if 'D' in dots:
+        elif 'D' in dots:
             router_list[0].con[5] = 1
             router_list[3].con[2] = 1
-            pygame.draw.line(screen, (128, 0, 128), (325, 80), (325, 190), 3)  # A-D
-        if 'E' in dots:
+        elif 'E' in dots:
             router_list[0].con[6] = 1
             router_list[4].con[2] = 1
-            pygame.draw.line(screen, (128, 0, 128), (350, 80), (580, 190), 3)  # A-E
-        if 'F' in dots:
+        elif 'F' in dots:
             router_list[0].con[7] = 1
             router_list[5].con[2] = 1
-            pygame.draw.line(screen, (128, 0, 128), (350, 80), (860, 190), 3)  # A-F
-        if 'G' in dots:
+        elif 'G' in dots:
             router_list[0].con[8] = 1
             router_list[6].con[2] = 1
-        if 'H' in dots:
+        elif 'H' in dots:
             router_list[0].con[9] = 1
             router_list[7].con[2] = 1
-            pygame.draw.line(screen, (128, 0, 128), (350, 80), (580, 340), 3)  # A-H
-        if 'I' in dots:
+        elif 'I' in dots:
             router_list[0].con[10] = 1
             router_list[8].con[2] = 1
-    if 'B' in dots:
+    elif 'B' in dots:
         if 'C' in dots:
             router_list[1].con[4] = 1
             router_list[2].con[3] = 1
-            pygame.draw.line(screen, (128, 0, 128), (630, 60), (860, 60), 3)  # B-C
-        if 'D' in dots:
+        elif 'D' in dots:
             router_list[1].con[5] = 1
             router_list[3].con[3] = 1
-            pygame.draw.line(screen, (128, 0, 128), (580, 80), (350, 190), 3)  # B-D
-        if 'E' in dots:
+        elif 'E' in dots:
             router_list[1].con[6] = 1
             router_list[4].con[3] = 1
-            pygame.draw.line(screen, (128, 0, 128), (605, 80), (605, 190), 3)  # B-E
-        if 'F' in dots:
+        elif 'F' in dots:
             router_list[1].con[7] = 1
             router_list[5].con[3] = 1
-            pygame.draw.line(screen, (128, 0, 128), (630, 80), (860, 190), 3)  # B-F
-        if 'G' in dots:
+        elif 'G' in dots:
             router_list[1].con[8] = 1
             router_list[6].con[3] = 1
-            pygame.draw.line(screen, (128, 0, 128), (580, 80), (350, 340), 3)  # B-G
-        if 'H' in dots:
+        elif 'H' in dots:
             router_list[1].con[9] = 1
             router_list[7].con[3] = 1
-        if 'I' in dots:
+        elif 'I' in dots:
             router_list[1].con[10] = 1
             router_list[8].con[3] = 1
-            pygame.draw.line(screen, (128, 0, 128), (630, 80), (860, 340), 3)  # B-I
-    if 'C' in dots:
+    elif 'C' in dots:
         if 'D' in dots:
             router_list[2].con[5] = 1
             router_list[3].con[4] = 1
-            pygame.draw.line(screen, (128, 0, 128), (860, 80), (350, 190), 3)  # C-D
-        if 'E' in dots:
+        elif 'E' in dots:
             router_list[2].con[6] = 1
             router_list[4].con[4] = 1
-            pygame.draw.line(screen, (128, 0, 128), (860, 80), (630, 190), 3)  # C-E
-        if 'F' in dots:
+        elif 'F' in dots:
             router_list[2].con[7] = 1
             router_list[5].con[4] = 1
-            pygame.draw.line(screen, (128, 0, 128), (885, 80), (885, 190), 3)  # C-F
-        if 'G' in dots:
+        elif 'G' in dots:
             router_list[2].con[8] = 1
             router_list[6].con[4] = 1
-        if 'H' in dots:
+        elif 'H' in dots:
             router_list[2].con[9] = 1
             router_list[7].con[4] = 1
-            pygame.draw.line(screen, (128, 0, 128), (860, 80), (630, 340), 3)  # C-H
-        if 'I' in dots:
+        elif 'I' in dots:
             router_list[2].con[10] = 1
             router_list[8].con[4] = 1
-    if 'D' in dots:
+    elif 'D' in dots:
         if 'E' in dots:
             router_list[3].con[6] = 1
             router_list[4].con[5] = 1
-            pygame.draw.line(screen, (128, 0, 128), (350, 210), (580, 210), 3)  # D-E
-        if 'F' in dots:
+        elif 'F' in dots:
             router_list[3].con[7] = 1
             router_list[5].con[5] = 1
-        if 'G' in dots:
+        elif 'G' in dots:
             router_list[3].con[8] = 1
             router_list[6].con[5] = 1
-            pygame.draw.line(screen, (128, 0, 128), (325, 230), (325, 340), 3)  # D-G
-        if 'H' in dots:
+        elif 'H' in dots:
             router_list[3].con[9] = 1
             router_list[7].con[5] = 1
-            pygame.draw.line(screen, (128, 0, 128), (350, 230), (580, 340), 3)  # D-H
-        if 'I' in dots:
+        elif 'I' in dots:
             router_list[3].con[10] = 1
             router_list[8].con[5] = 1
-            pygame.draw.line(screen, (128, 0, 128), (350, 230), (860, 340), 3)  # D-I
-    if 'E' in dots:
+    elif 'E' in dots:
         if 'F' in dots:
             router_list[4].con[7] = 1
             router_list[5].con[6] = 1
-            pygame.draw.line(screen, (128, 0, 128), (630, 210), (860, 210), 3)  # E-F
-        if 'G' in dots:
+        elif 'G' in dots:
             router_list[4].con[8] = 1
             router_list[6].con[6] = 1
-            pygame.draw.line(screen, (128, 0, 128), (580, 230), (350, 340), 3)  # E-G
-        if 'H' in dots:
+        elif 'H' in dots:
             router_list[4].con[9] = 1
             router_list[7].con[6] = 1
-            pygame.draw.line(screen, (128, 0, 128), (605, 230), (605, 340), 3)  # E-H
-        if 'I' in dots:
+        elif 'I' in dots:
             router_list[4].con[10] = 1
             router_list[8].con[6] = 1
-            pygame.draw.line(screen, (128, 0, 128), (630, 230), (860, 340), 3)  # E-I
-    if 'F' in dots:
+    elif 'F' in dots:
         if 'G' in dots:
             router_list[5].con[8] = 1
             router_list[6].con[7] = 1
-            pygame.draw.line(screen, (128, 0, 128), (860, 230), (350, 340), 3)  # F-G
-        if 'H' in dots:
+        elif 'H' in dots:
             router_list[5].con[9] = 1
             router_list[7].con[7] = 1
-            pygame.draw.line(screen, (128, 0, 128), (860, 230), (630, 340), 3)  # F-H
-        if 'I' in dots:
+        elif 'I' in dots:
             router_list[5].con[10] = 1
             router_list[8].con[7] = 1
-            pygame.draw.line(screen, (128, 0, 128), (885, 230), (885, 340), 3)  # F-I
-    if 'G' in dots:
+    elif 'G' in dots:
         if 'H' in dots:
             router_list[6].con[9] = 1
             router_list[7].con[8] = 1
-            pygame.draw.line(screen, (128, 0, 128), (350, 360), (580, 360), 3)  # G-H
-        if 'I' in dots:
+        elif 'I' in dots:
             router_list[6].con[10] = 1
             router_list[8].con[8] = 1
-    if 'H' in dots:
+    elif 'H' in dots:
         if 'I' in dots:
             router_list[7].con[10] = 1
             router_list[8].con[9] = 1
-            pygame.draw.line(screen, (128, 0, 128), (630, 360), (860, 360), 3)  # H-I
     return
 
 
-def clean_color(stats):
+def clean_color(stats, ai_setting):
     """重置所有路由器和路径的颜色"""
     for router in router_list:
-        router.image = pygame.image.load('images/router_blue.png')
+        router.image = pygame.image.load('images/router_un.png')
     for i in range(38):
-        stats.line_color[i] = (128, 0, 128)
+        stats.line_color[i] = ai_setting.unline_color
     return
 
 
-def change_line_color(name1, name2, stats):
+def change_line_color(name1, name2, stats, ai_setting):
     stats.line_color[0] = [60, 179, 113]
     stats.line_color[1] = [60, 179, 113]
     name = [name1, name2]

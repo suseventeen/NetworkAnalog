@@ -22,15 +22,15 @@ def main():
     computers = f.create_computers(ai_settings, screen)
     routers, router_list = f.create_routers(ai_settings, screen)
 
-    stats = Stats()
+    stats = Stats(ai_settings)
 
     #  创建board组
     boards = f.create_board(ai_settings, screen, stats)
 
     #  创建按钮
-    button_draw_line = Button(ai_settings, screen, "draw line", 100, 460)
-    button_get_table = Button(ai_settings, screen, "get table", 250, 460)
-    button_clean = Button(ai_settings, screen, "clean all", 400, 460)
+    button_draw_line = Button(ai_settings, screen, "draw line", 100, 440)
+    button_get_table = Button(ai_settings, screen, "get table", 250, 440)
+    button_clean = Button(ai_settings, screen, "clean all", 400, 440)
 
     f.set_con()
 

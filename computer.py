@@ -2,7 +2,6 @@ import pygame
 from pygame.sprite import Sprite
 
 
-
 class Computer(Sprite):
     """表示单个主机的类"""
 
@@ -29,17 +28,15 @@ class Computer(Sprite):
         pack['des'] = des
         return pack
 
-
-    def input(self, msg, stats):
+    def input(self, msg, stats, ai_setting):
         import function as f
         data = msg
         if self.name == 'Alice':
             pack = self.package(data, 'Bob')
-            f.send(pack, 'D', stats)
+            f.send(pack, 'D', stats, ai_setting)
         elif self.name == 'Bob':
             pack = self.package(data, 'Alice')
-            f.send(pack, 'F', stats)
-
+            f.send(pack, 'F', stats, ai_setting)
 
     def output(self, pack):
         data = pack['data']
@@ -47,4 +44,3 @@ class Computer(Sprite):
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
-

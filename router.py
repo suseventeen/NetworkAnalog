@@ -13,7 +13,7 @@ class Router(Sprite):
         self.name = name  # 定义路由器的名称
         self.form = {'Alice': [999, 'none'], 'Bob': [999, 'none']}  # 路由表
         self.con = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # Alice,Bob,A,B,C,D,E,F,G,H,I
-        self.image = pygame.image.load('images/router_blue.png')
+        self.image = pygame.image.load('images/router_un.png')
         self.rect = self.image.get_rect()
 
         self.rect.x = x
@@ -21,14 +21,14 @@ class Router(Sprite):
 
         self.x = float(self.rect.x)
 
-    def recv(self, pack, stats):
+    def recv(self, pack, stats, ai_setting):
         self.image = pygame.image.load('images/router_green.png')
         import function as f
         des = pack['des']  # 从包中提取目的地址
         next = self.form[des][1]  # 从路由表中查找下一跳地址
-        f.send(pack, next, stats)  # 转发给下一跳
+        f.send(pack, next, stats, ai_setting)  # 转发给下一跳
 
-        f.change_line_color(self.name, next, stats)
+        f.change_line_color(self.name, next, stats, ai_setting)
 
     def update_form(self, source, form):
         sign = 0
